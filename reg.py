@@ -1,8 +1,8 @@
 import sys
 
-pattern = 'he.*$'
+pattern = 'he[lapdog]$'
 match = 'helloooooor'
-debug = False
+debug = True
 
 def tokenize(pattern):
     tokens = []
@@ -13,6 +13,13 @@ def tokenize(pattern):
 
         if ord(cc) in alphabet:
             tokens.append(['LETTER', cc])
+        elif cc == '[':
+            i += 1
+            patt = ''
+            while not pattern[i] == ']':
+                patt += pattern[i]
+                i += 1
+            tokens.append(['BRACKET', patt])
         elif cc == '*':
             prev = pattern[i - 1]
             tokens.pop()
@@ -60,7 +67,7 @@ for tsplit in tokens:
         else:
             print 'FAILED pone target not matched!'
             sys.exit(0)
-    elif tsplit[0] == 'PZERO':
+    elif tsplit[0] == 'PZERO': # Kleene start
         target = tsplit[1]
         while match[index] == target:
             index += 1
